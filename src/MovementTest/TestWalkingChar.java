@@ -82,7 +82,7 @@ public class TestWalkingChar extends SimpleApplication
     player = new CharacterControl(capsuleShape, 0.05f);
     player.setJumpSpeed(5);
     player.setFallSpeed(10);
-    player.setGravity(new Vector3f(0f, -9.81f, 0f));
+    player.setGravity(9.81f);
     player.setPhysicsLocation(new Vector3f(0, 10, 0));
 
     // We attach the scene and the player to the rootnode and the physics space,
