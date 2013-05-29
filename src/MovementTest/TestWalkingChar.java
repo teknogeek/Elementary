@@ -22,11 +22,13 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
+import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.shape.Box;
 
 
 /**
@@ -41,6 +43,7 @@ public class TestWalkingChar extends SimpleApplication
   private BulletAppState bulletAppState;
   private RigidBodyControl landscape;
   private CharacterControl player;
+  private Geometry geom;
   private Vector3f walkDirection = new Vector3f();
   private boolean left = false, right = false, up = false, down = false;
 
@@ -72,6 +75,9 @@ public class TestWalkingChar extends SimpleApplication
             CollisionShapeFactory.createMeshShape((Node) sceneModel);
     landscape = new RigidBodyControl(sceneShape, 0);
     sceneModel.addControl(landscape);
+    
+
+  
 
     // We set up collision detection for the player by creating
     // a capsule collision shape and a CharacterControl.
@@ -81,10 +87,18 @@ public class TestWalkingChar extends SimpleApplication
     CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 6f, 1);
     player = new CharacterControl(capsuleShape, 0.05f);
     player.setJumpSpeed(5);
-    player.setFallSpeed(10);
+    player.setFallSpeed(20);
     player.setGravity(9.81f);
     player.setPhysicsLocation(new Vector3f(0, 10, 0));
 
+    @SuppressWarnings("deprecation")
+	Box box = new Box(Vector3f.ZERO, 1, 1, 1);
+
+    geom = new Geometry("Box", box);
+
+    geom.setMaterial(new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md"));
+    rootNode.attachChild(geom);
+    
     // We attach the scene and the player to the rootnode and the physics space,
     // to make them appear in the game world.
     rootNode.attachChild(sceneModel);
@@ -153,5 +167,6 @@ public class TestWalkingChar extends SimpleApplication
     if (down)  { walkDirection.addLocal(camDir.negate()); }
     player.setWalkDirection(walkDirection);
     cam.setLocation(player.getPhysicsLocation());
+    geom.rotate(0, 0, 1);
   }
 }
